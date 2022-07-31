@@ -7,17 +7,29 @@ import {
     AiOutlineStar
 } from 'react-icons/ai';
 import { Product } from '../../components/';
+import { useStateContext } from '../../context/StateContext';
 
 const ProductDetails = ({ products, product }) => {
     const { image, name, details, price } = product;
     const [photoIndex, setPhotoIndex] = useState(0);
+    const { decreaseQuantity, increaseQuantity, qty, onAdd, setShowCart } =
+        useStateContext();
+
+    const handleBuyNow = () => {
+        onAdd(product, qty);
+        setShowCart(true);
+    };
 
     return (
         <div>
             <div className="product-detail-container">
                 <div>
                     <div className="image-container">
-                        <img src={urlFor(image && image[photoIndex])} alt="" className='product-detail-image' />
+                        <img
+                            src={urlFor(image && image[photoIndex])}
+                            alt=""
+                            className="product-detail-image"
+                        />
                     </div>
                     <div className="small-images-container">
                         {image?.map((item, index) => (
@@ -53,11 +65,11 @@ const ProductDetails = ({ products, product }) => {
                     <div className="quantity">
                         <h3>Quantity:</h3>
                         <p className="quantity-desc">
-                            <span className="minus" onClick="">
+                            <span className="minus" onClick={decreaseQuantity}>
                                 <AiOutlineMinus />
                             </span>
-                            <span className="num">0</span>
-                            <span className="plus" onClick="">
+                            <span className="num">{qty}</span>
+                            <span className="plus" onClick={increaseQuantity}>
                                 <AiOutlinePlus />
                             </span>
                         </p>
@@ -66,11 +78,15 @@ const ProductDetails = ({ products, product }) => {
                         <button
                             type="button"
                             className="add-to-cart"
-                            onClick=""
+                            onClick={() => onAdd(product, qty)}
                         >
                             Add to Cart
                         </button>
-                        <button type="button" className="buy-now" onClick="">
+                        <button
+                            type="button"
+                            className="buy-now"
+                            onClick={handleBuyNow}
+                        >
                             Buy Now
                         </button>
                     </div>
